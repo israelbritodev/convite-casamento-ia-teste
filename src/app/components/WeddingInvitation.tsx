@@ -134,7 +134,7 @@ export function WeddingInvitation() {
 
   return (
     <div
-      className="w-full max-w-lg mx-auto h-[85dvh] max-h-[900px] min-h-screen"
+      className="w-full max-w-lg mx-auto h-[85dvh] max-h-[900px] min-h-[85dvh]"
       style={{ perspective: "1500px" }}
     >
       <AnimatePresence mode="wait">
@@ -153,7 +153,7 @@ export function WeddingInvitation() {
             <motion.img
               src={coverImage}
               alt="Convite"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain sm:object-cover"
               exit={{ scale: 1.1, filter: "blur(10px)" }}
               transition={{ duration: 0.8 }}
             />
@@ -175,7 +175,7 @@ export function WeddingInvitation() {
               className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10 pointer-events-none"
             >
               <div className="bg-white/95 backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 rounded-2xl shadow-xl border-2 border-blue-300/40">
-                <p className="text-blue-900 text-sm sm:text-base font-semibold tracking-wide">
+                <p className="text-blue-900 text-sm sm:text-base font-semibold tracking-wide whitespace-nowrap">
                   Toque para interagir
                 </p>
               </div>
@@ -215,7 +215,7 @@ export function WeddingInvitation() {
 
               {/* Conteúdo do header */}
               <div className="relative z-10 text-center space-y-3">
-                <h1 className="font-script text-5xl sm:text-6xl md:text-7xl leading-tight text-blue-900 italic text-shadow-romantic">
+                <h1 className="font-script text-4xl sm:text-6xl md:text-7xl leading-tight text-blue-900 italic text-shadow-romantic whitespace-nowrap">
                   {weddingData.groom}
                 </h1>
 
@@ -223,7 +223,7 @@ export function WeddingInvitation() {
                   &
                 </p>
 
-                <h1 className="font-script text-5xl sm:text-6xl md:text-7xl leading-tight text-blue-900 italic text-shadow-romantic">
+                <h1 className="font-script text-4xl sm:text-6xl md:text-7xl leading-tight text-blue-900 italic text-shadow-romantic whitespace-nowrap">
                   {weddingData.bride}
                 </h1>
 
@@ -416,12 +416,8 @@ export function WeddingInvitation() {
                   <br />
                   • O local possui estacionamento gratuito
                   <br />• Celebração privada
-                  <br />• Por ser em um local privado há limite
-                  de pessoas, logo este convite é referente a
-                  VOCÊ e sua ESPOSA/MARIDO, caso houver, se
-                  desejar levar seus filhos ou parentes para o
-                  evento precisará pagar a entrada deles. Caso
-                  haja dúvida entre em contato.
+                  <br />• Por ser em um local privado há limite de pessoas, logo este convite é referente a VOCÊ e sua ESPOSA/MARIDO, caso houver, se desejar
+                  levar seus filhos ou parentes para o evento precisará pagar a entrada deles. Caso haja dúvida entre em contato.
                 </p>
               </div>
             </div>
