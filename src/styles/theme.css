@@ -136,6 +136,12 @@
   html {
     font-size: var(--font-size);
   }
+  
+  body {
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
 
   h1 {
     font-size: var(--text-2xl);
@@ -178,4 +184,42 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* ================================
+   Scrollbar – Tema Discreto
+   ================================ */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(
+    in oklch,
+    var(--foreground) 20%,
+    transparent
+  );
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(
+    in oklch,
+    var(--foreground) 35%,
+    transparent
+  );
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: 
+    color-mix(in oklch, var(--foreground) 25%, transparent)
+    transparent;
 }

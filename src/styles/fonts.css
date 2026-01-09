@@ -1,0 +1,47 @@
+
+
+/* IMPORTAÇÃO */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap");
+/* Importa Pinyon Script (títulos cursivos elegantes) */
+@import url("https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap");
+/* Great Vibes */
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+/* Raleway */
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap");
+
+
+/* VARIÁVEIS GLOBAIS */
+:root {
+  --font-heading-script: "Pinyon Script", serif;
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* CLASSES UTILITÁRIAS */
+
+.font-raleway {
+  font-family: "Raleway", sans-serif;
+}
+
+
+.font-script {
+  font-family: var(--font-heading-script);
+}
+
+.text-shadow-romantic {
+  text-shadow:
+    0 1px 1px rgba(255, 255, 255, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.font-great-vibes {
+  font-family: "Great Vibes", cursive;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
