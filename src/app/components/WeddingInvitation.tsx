@@ -7,7 +7,8 @@ import {
   MessageCircle,
   Gift,
   Info,
-  ChevronDown,
+  Hand,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -15,9 +16,59 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "./ui/dialog";
 import { GiftRegistry } from "./GiftRegistry";
-import coverImage from "figma:asset/7809b2f4381e25b916d2eed6f0bfdb8a20773068.png";
+
+const coverImage =
+  "https://jdfeczhjhkosemqiasud.supabase.co/storage/v1/object/public/images/capa.png";
+
+interface IconItemProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onClick?: () => void;
+}
+
+const handleInstagramEffects = () => {
+  window.open(
+    "https://www.instagram.com/jovembritojr/",
+    "_blank",
+  );
+};
+
+function IconItem({
+  icon: Icon,
+  label,
+  onClick,
+}: IconItemProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center gap-2 cursor-pointer group transition-transform hover:scale-110 active:scale-95"
+    >
+      <div
+        className="
+          w-18 h-18
+          sm:w-16 sm:h-16
+          rounded-full
+          bg-blue-50/90
+          border-3 border-blue-200/60
+          flex items-center justify-center
+          shadow-md
+          group-hover:shadow-lg
+          group-hover:bg-blue-100/90
+          transition-all duration-300
+        "
+      >
+        <Icon className="w-8 h-8 sm:w-7 sm:h-7 text-blue-700 drop-shadow-sm stroke-[1.8]" />
+      </div>
+
+      <span className="text-[10px] sm:text-xs text-gray-700 font-medium text-center">
+        {label}
+      </span>
+    </button>
+  );
+}
 
 export function WeddingInvitation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +89,7 @@ export function WeddingInvitation() {
     whatsappNumber: "+5581983645043",
     googleMapsLink: "https://maps.app.goo.gl/GLoPum9dhUCkFP7H9",
     dressCode:
-      "Traje: Esporte Fino e lembre-se de evitar o uso de roupas brancas e tons claros",
+      "Traje: Esporte fino e lembre-se de evitar o uso de roupas brancas e tons claros",
     pixKey:
       "israel.olv05@gmail.com - Israel J. Oliveira (Banco do Brasil)",
     bankDetails: "Banco: 001 | Ag: 0697-1 | Conta: 45174-6",
@@ -67,7 +118,7 @@ export function WeddingInvitation() {
       `Recepção: ${weddingData.reception}`,
     );
     const eventLocation = encodeURIComponent(
-      weddingData.address,
+      weddingData.receptionAddress,
     );
     const eventDate = "20250225T190000/20250225T230000";
 
@@ -88,86 +139,49 @@ export function WeddingInvitation() {
     >
       <AnimatePresence mode="wait">
         {!isOpen ? (
-          // CAPA DO CONVITE COM EFEITO DE ABERTURA
+          // CAPA DO CONVITE COM TRANSIÇÃO SIMPLES
           <motion.div
             key="cover"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="relative w-full h-full"
-            style={{ perspective: "1500px" }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            onClick={handleOpenInvitation}
+            className="relative w-full h-full cursor-pointer rounded-3xl overflow-hidden shadow-2xl"
           >
-            {/* Porta Esquerda */}
+            {/* Imagem de fundo */}
+            <motion.img
+              src={coverImage}
+              alt="Convite"
+              className="w-full h-full object-cover"
+              exit={{ scale: 1.1, filter: "blur(10px)" }}
+              transition={{ duration: 0.8 }}
+            />
+
+            {/* Overlay com gradiente na saída */}
             <motion.div
-              className="absolute top-0 left-0 w-1/2 h-full origin-left"
-              style={{
-                transformStyle: "preserve-3d",
-                backfaceVisibility: "hidden",
-              }}
-              animate={{ rotateY: 0 }}
-              exit={{ rotateY: -110 }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              onClick={handleOpenInvitation}
-            >
-              <div className="relative w-full h-full bg-white rounded-l-3xl shadow-2xl overflow-hidden cursor-pointer">
-                {/* Imagem da capa - lado esquerdo */}
-                <div className="absolute inset-0">
-                  <img
-                    src={coverImage}
-                    alt="Convite"
-                    className="w-[200%] h-full object-cover object-left"
-                    style={{ transform: "translateX(0)" }}
-                  />
-                </div>
+              className="absolute inset-0 bg-gradient-to-t from-blue-900/20 via-transparent to-blue-900/20"
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            />
 
-                {/* Sombra de profundidade */}
-                <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-r from-transparent to-black/10" />
-              </div>
-            </motion.div>
-
-            {/* Porta Direita */}
-            <motion.div
-              className="absolute top-0 right-0 w-1/2 h-full origin-right"
-              style={{
-                transformStyle: "preserve-3d",
-                backfaceVisibility: "hidden",
-              }}
-              animate={{ rotateY: 0 }}
-              exit={{ rotateY: 110 }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              onClick={handleOpenInvitation}
-            >
-              <div className="relative w-full h-full bg-white rounded-r-3xl shadow-2xl overflow-hidden cursor-pointer">
-                {/* Imagem da capa - lado direito */}
-                <div className="absolute inset-0">
-                  <img
-                    src={coverImage}
-                    alt="Convite"
-                    className="w-[200%] h-full object-cover object-right"
-                    style={{ transform: "translateX(-100%)" }}
-                  />
-                </div>
-
-                {/* Sombra de profundidade */}
-                <div className="absolute top-0 left-0 w-8 h-full bg-gradient-to-l from-transparent to-black/10" />
-              </div>
-            </motion.div>
-
-            {/* Indicador para abrir - sobreposto */}
+            {/* Indicador para abrir - tema atualizado */}
             <motion.div
               animate={{
                 y: [0, 10, 0],
-                opacity: [0.8, 1, 0.8],
+                opacity: [0.9, 1, 0.9],
               }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 pointer-events-none"
+              className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10 pointer-events-none"
             >
-              <div className="bg-white/95 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg border border-blue-200">
-                <p className="text-blue-900 text-xs sm:text-sm font-medium">
-                  Toque para abrir
+              <div className="bg-white/95 backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 rounded-2xl shadow-xl border-2 border-blue-300/40">
+                <p className="text-blue-900 text-sm sm:text-base font-semibold tracking-wide">
+                  Toque para interagir
                 </p>
               </div>
-              <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-blue-900" />
+              <div className="bg-blue-100/90 backdrop-blur-sm p-2 rounded-full border-2 border-blue-300/60 shadow-lg">
+                <Hand className="w-6 h-6 sm:w-7 sm:h-7 text-blue-800" />
+              </div>
             </motion.div>
           </motion.div>
         ) : (
@@ -179,7 +193,7 @@ export function WeddingInvitation() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="
     font-raleway
-    min-h-screen w-full bg-[url('https://jdfeczhjhkosemqiasud.supabase.co/storage/v1/object/public/images/background.png')] bg-cover bg-center bg-no-repeat
+    min-h-screen w-full bg-[url('https://jdfeczhjhkosemqiasud.supabase.co/storage/v1/object/public/images/background2.png')] bg-cover bg-center bg-no-repeat
   "
           >
             {/* Header decorativo */}
@@ -188,7 +202,8 @@ export function WeddingInvitation() {
               <img
                 src="https://media-public.canva.com/5CsFo/MAFyRB5CsFo/1/tl.png"
                 alt=""
-                loading="lazy" decoding="async"
+                loading="lazy"
+                decoding="async"
                 className="
       absolute -top-0 -left-0
       w-28 sm:w-36 md:w-40
@@ -267,91 +282,60 @@ export function WeddingInvitation() {
                 </div>
               </motion.div>
 
-              {/* Botões de ação */}
+              {/* Ícones informativos com funcionalidades */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.6 }}
-                className="space-y-3 pt-2 sm:pt-4"
+                className="grid grid-cols-3 max-w-md mx-auto gap-4 sm:gap-6 justify-items-center pt-4 sm:pt-6 pb-2"
               >
-                <Button
+                <IconItem
+                  icon={MapPin}
+                  label="Local"
+                  onClick={handleLocation}
+                />
+                <IconItem
+                  icon={MessageCircle}
+                  label="Confirmar"
                   onClick={handleConfirmPresence}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-5 sm:py-6 rounded-xl shadow-lg text-sm sm:text-base"
-                >
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Confirmar Presença
-                </Button>
-
-                <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                  <Button
-                    onClick={handleLocation}
-                    variant="outline"
-                    className="py-5 sm:py-6 rounded-xl border-2 border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
-                  >
-                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Localização
-                  </Button>
-
-                  <Button
-                    onClick={handleCalendar}
-                    variant="outline"
-                    className="py-5 sm:py-6 rounded-xl border-2 border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
-                  >
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Salvar na Agenda
-                  </Button>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                  <Button
-                    onClick={() => setShowGiftRegistry(true)}
-                    variant="outline"
-                    className="py-5 sm:py-6 rounded-xl border-2 border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
-                  >
-                    <Gift className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Presentear
-                  </Button>
-
-                  <Button
-                    onClick={() => setShowMoreInfo(true)}
-                    variant="outline"
-                    className="py-5 sm:py-6 rounded-xl border-2 border-blue-200 hover:bg-blue-50 text-xs sm:text-sm"
-                  >
-                    <Info className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Mais Info
-                  </Button>
-                </div>
+                />
+                <IconItem
+                  icon={Calendar}
+                  label="Agenda"
+                  onClick={handleCalendar}
+                />
+                <IconItem
+                  icon={Gift}
+                  label="Presentes"
+                  onClick={() => setShowGiftRegistry(true)}
+                />
+                <IconItem
+                  icon={Info}
+                  label="Informações"
+                  onClick={() => setShowMoreInfo(true)}
+                />
+                <IconItem
+                  icon={Sparkles}
+                  label="Efeitos"
+                  onClick={handleInstagramEffects}
+                />
               </motion.div>
 
               {/* Mensagem final */}
               <div className="relative overflow-hidden pb-28 sm:pb-32 md:pb-36 pb-[env(safe-area-inset-bottom)]">
                 <motion.div className="text-center py-3 sm:py-4">
-                <div className="relative z-10 text-center">
-                <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mx-auto mb-2 sm:mb-3" />
-                <p className="text-xs sm:text-sm text-gray-500 italic">
-                  "Acima de tudo, porém, revistam-se <br></br>do
-                  amor que é o elo perfeito."
-                </p>
-                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
-                  Colossenses 3 : 14
-                </p>
-                </div>
-              </motion.div>
-                            {/* Flor canto inferior direito (espelhada) */}
-              <img
-                src="https://media-public.canva.com/5CsFo/MAFyRB5CsFo/1/tl.png"
-                alt=""
-                loading="lazy" decoding="async"
-                className="
-      absolute bottom-0 right-0 top--100
-      w-32 sm:w-40 md:w-44
-      opacity-80
-      rotate-180
-      pointer-events-none
-      select-none
-    "
-              />
-            </div>
+                  <div className="relative z-10 text-center">
+                    <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mx-auto mb-2 sm:mb-3" />
+                    <p className="text-xs sm:text-sm text-gray-500 italic">
+                      "Acima de tudo, porém, revistam-se{" "}
+                      <br></br>do amor que é o elo perfeito."
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                      Colossenses 3 : 14
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
@@ -371,6 +355,7 @@ export function WeddingInvitation() {
                 onBack={() => setShowGiftRegistry(false)}
                 pixKey={weddingData.pixKey}
                 bankDetails={weddingData.bankDetails}
+                whatsappNumber={weddingData.whatsappNumber}
               />
             </div>
           </motion.div>
@@ -389,6 +374,9 @@ export function WeddingInvitation() {
               Mais Informações
             </DialogTitle>
           </DialogHeader>
+          <DialogDescription className="text-sm text-gray-500">
+            Detalhes importantes para sua presença
+          </DialogDescription>
           <div className="space-y-4 pt-4">
             <div className="space-y-3">
               <div className="bg-blue-50 rounded-lg p-4">
@@ -427,7 +415,13 @@ export function WeddingInvitation() {
                   • Confirme sua presença até 10/02/2025
                   <br />
                   • O local possui estacionamento gratuito
-                  <br />• Celebração aberta e fechada
+                  <br />• Celebração privada
+                  <br />• Por ser em um local privado há limite
+                  de pessoas, logo este convite é referente a
+                  VOCÊ e sua ESPOSA/MARIDO, caso houver, se
+                  desejar levar seus filhos ou parentes para o
+                  evento precisará pagar a entrada deles. Caso
+                  haja dúvida entre em contato.
                 </p>
               </div>
             </div>
