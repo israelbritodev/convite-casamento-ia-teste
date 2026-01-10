@@ -21,7 +21,7 @@ import {
 import { GiftRegistry } from "./GiftRegistry";
 
 const coverImage =
-  "https://jdfeczhjhkosemqiasud.supabase.co/storage/v1/object/public/images/capa.png";
+  "https://jdfeczhjhkosemqiasud.supabase.co/storage/v1/object/public/images/capa2.png";
 
 interface IconItemProps {
   icon: React.ComponentType<{ className?: string }>;
