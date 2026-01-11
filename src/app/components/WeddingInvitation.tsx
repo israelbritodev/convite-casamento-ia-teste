@@ -86,18 +86,19 @@ export function WeddingInvitation() {
     reception: "Boi e Brasa - Abreu e Lima",
     receptionAddress:
       "Av. Brasil, 1945 - Desterro, Abreu e Lima - PE, 53570-165",
-    whatsappNumber: "+5581983645043",
+    whatsappNumber: "+5581992724907",
     googleMapsLink: "https://maps.app.goo.gl/GLoPum9dhUCkFP7H9",
     dressCode:
-      "Traje: Esporte fino e lembre-se de evitar o uso de roupas brancas e tons claros",
+      "Traje: Esporte fino e lembre-se de evitar o uso de roupas brancas",
     pixKey:
       "israel.olv05@gmail.com - Israel J. Oliveira (Banco do Brasil)",
     bankDetails: "Banco: 001 | Ag: 0697-1 | Conta: 45174-6",
+    mercadoPagoLink: "https://link.mercadopago.com.br/casaramosdebrito",
   };
 
   const handleConfirmPresence = () => {
     const message = encodeURIComponent(
-      `Olá! Confirmo minha presença no almoço de casamento dos noivos ${weddingData.bride} e ${weddingData.groom}! 💒`,
+      `Olá! Confirmo minha presença no almoço de casamento dos noivos ${weddingData.bride} e ${weddingData.groom}! ⛪`,
     );
     window.open(
       `https://wa.me/${weddingData.whatsappNumber}?text=${message}`,
@@ -356,6 +357,7 @@ export function WeddingInvitation() {
                 pixKey={weddingData.pixKey}
                 bankDetails={weddingData.bankDetails}
                 whatsappNumber={weddingData.whatsappNumber}
+                mercadoPagoLink={weddingData.mercadoPagoLink}
               />
             </div>
           </motion.div>

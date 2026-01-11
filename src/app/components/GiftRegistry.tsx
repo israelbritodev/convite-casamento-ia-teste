@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ShoppingCart, Plus, Minus, X, ArrowLeft, Gift, CreditCard, User, Mail, Phone } from "lucide-react";
+import { ShoppingCart, Plus, Minus, X, ArrowLeft, Gift, CreditCard, User, Mail, Phone, Banknote } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -23,13 +23,15 @@ interface GiftRegistryProps {
   pixKey: string;
   bankDetails: string;
   whatsappNumber?: string;
+  mercadoPagoLink?: string;
 }
 
-export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5581983645043" }: GiftRegistryProps) {
+export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5581992724907", mercadoPagoLink = "https://link.mercadopago.com.br/casaramosdebrito" }: GiftRegistryProps) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
+  const [paymentMethod, setPaymentMethod] = useState<"pix" | "card" | null>(null);
 
   // Dados do formulário
   const [formData, setFormData] = useState({
@@ -265,6 +267,17 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
     }
   };
 
+  const handleCardPayment = () => {
+    // Redireciona para o Mercado Pago com o carrinho completo
+    window.open(mercadoPagoLink, "_blank");
+    
+    // Resetar após redirecionar
+    setCart([]);
+    setShowCheckout(false);
+    setShowCart(false);
+    setPaymentMethod(null);
+  };
+
   const removeFromCart = (id: number) => {
     setCart(cart.filter(item => item.id !== id));
   };
@@ -301,11 +314,11 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
       `📬 *Presentes:*\n`
     ) + giftListDetailed + encodeURIComponent(
       `\n\n *💰Total: R$ ${totalPrice.toFixed(2)}*\n\n` +
-      `👤*Dados do Presenteador:*\n` +
+      `🤑*Dados do Presenteador:*\n` +
       `Nome: ${formData.name}\n` +
       `Email: ${formData.email}\n` +
       `Telefone: ${formData.phone}\n\n` +
-      `Aguardo confirmação dos dados para realizar o pix!💙`
+      `Aguardo confirmação dos dados para realizar o pix!💜`
     );
     
     // Abre WhatsApp com a mensagem
@@ -317,7 +330,9 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
     // Resetar após enviar
     setCart([]);
     setShowCheckout(false);
+    setShowCart(false);
     setFormData({ name: "", email: "", phone: "" });
+    setPaymentMethod(null);
   };
 
   return (
@@ -378,7 +393,7 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
 
       {/* Lista de Presentes */}
       <div className="flex-1 overflow-y-auto p-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredGifts.map(gift => (
             <motion.div
               key={gift.id}
@@ -394,26 +409,42 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="p-3 space-y-2">
+              <div className="p-4 space-y-3">
+                {/* Nome e Descrição */}
                 <div>
-                  <h3 className="font-semibold text-sm text-blue-900 line-clamp-1">
+                  <h3 className="font-semibold text-base text-blue-900 line-clamp-2 leading-tight">
                     {gift.name}
                   </h3>
-                  <p className="text-xs text-blue-700/60 line-clamp-2">
+                  <p className="text-xs text-blue-700/60 line-clamp-2 mt-1">
                     {gift.description}
                   </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-blue-700 font-bold text-sm">
+                
+                {/* Preço */}
+                <div className="pt-1">
+                  <span className="text-blue-700 font-bold text-lg">
                     R$ {gift.price.toFixed(2)}
                   </span>
-                  <button
-                    onClick={() => addToCart(gift)}
-                    className="bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-xl transition-colors shadow-md hover:shadow-lg"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
                 </div>
+                
+                {/* Botão Adicionar */}
+                <button
+                  onClick={() => addToCart(gift)}
+                  className="
+                    w-full
+                    bg-blue-700 hover:bg-blue-800 
+                    text-white text-sm font-medium
+                    py-3 px-4
+                    rounded-xl 
+                    transition-all duration-200
+                    shadow-md hover:shadow-lg
+                    active:scale-95
+                    flex items-center justify-center gap-2
+                  "
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Adicionar ao Carrinho</span>
+                </button>
               </div>
             </motion.div>
           ))}
@@ -578,89 +609,190 @@ export function GiftRegistry({ onBack, pixKey, bankDetails, whatsappNumber = "+5
                     </div>
                   </div>
 
-                  {/* Formulário */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900">Seus Dados</h4>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                        Nome Completo
-                      </Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="Seu nome"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
+                  {/* Seleção de Método de Pagamento */}
+                  {!paymentMethod ? (
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-gray-900 text-center mb-4">Escolha a forma de pagamento</h4>
+                      
+                      {/* Botão PIX */}
+                      <button
+                        onClick={() => setPaymentMethod("pix")}
+                        className="
+                          w-full
+                          bg-gradient-to-r from-green-600 to-green-700
+                          hover:from-green-700 hover:to-green-800
+                          text-white
+                          py-4 px-6
+                          rounded-xl
+                          transition-all duration-200
+                          shadow-lg hover:shadow-xl
+                          active:scale-95
+                          flex items-center justify-center gap-3
+                        "
+                      >
+                        <Banknote className="w-6 h-6" />
+                        <div className="text-left">
+                          <div className="font-bold text-base">Pagar com PIX</div>
+                          <div className="text-xs text-green-100">Transferência instantânea</div>
+                        </div>
+                      </button>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                        E-mail
-                      </Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="seu@email.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="pl-10"
-                        />
-                      </div>
+                      {/* Botão Cartão */}
+                      <button
+                        onClick={() => setPaymentMethod("card")}
+                        className="
+                          w-full
+                          bg-gradient-to-r from-blue-600 to-blue-700
+                          hover:from-blue-700 hover:to-blue-800
+                          text-white
+                          py-4 px-6
+                          rounded-xl
+                          transition-all duration-200
+                          shadow-lg hover:shadow-xl
+                          active:scale-95
+                          flex items-center justify-center gap-3
+                        "
+                      >
+                        <CreditCard className="w-6 h-6" />
+                        <div className="text-left">
+                          <div className="font-bold text-base">Pagar com Cartão</div>
+                          <div className="text-xs text-blue-100">Via Mercado Pago</div>
+                        </div>
+                      </button>
                     </div>
+                  ) : paymentMethod === "pix" ? (
+                    <>
+                      {/* Formulário PIX */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-semibold text-gray-900">Seus Dados</h4>
+                          <button
+                            onClick={() => setPaymentMethod(null)}
+                            className="text-sm text-blue-600 hover:text-blue-700 underline"
+                          >
+                            Voltar
+                          </button>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                            Nome Completo
+                          </Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Input
+                              id="name"
+                              type="text"
+                              placeholder="Seu nome"
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              className="pl-10"
+                            />
+                          </div>
+                        </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                        Telefone
-                      </Label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="(11) 99999-9999"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="pl-10"
-                        />
+                        <div className="space-y-2">
+                          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                            E-mail
+                          </Label>
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Input
+                              id="email"
+                              type="email"
+                              placeholder="seu@email.com"
+                              value={formData.email}
+                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                              className="pl-10"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                            Telefone
+                          </Label>
+                          <div className="relative">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                            <Input
+                              id="phone"
+                              type="tel"
+                              placeholder="(11) 99999-9999"
+                              value={formData.phone}
+                              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                              className="pl-10"
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Dados PIX */}
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <CreditCard className="w-5 h-5 text-green-600" />
-                      Dados para PIX
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="text-gray-600">Chave PIX:</span>
-                        <p className="font-mono text-gray-900 bg-white p-2 rounded mt-1 border border-green-200">
-                          {pixKey}
-                        </p>
+                      {/* Dados PIX */}
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <Banknote className="w-5 h-5 text-green-600" />
+                          Dados para PIX
+                        </h4>
+                        <div className="space-y-2 text-sm">
+                          <div>
+                            <span className="text-gray-600">Chave PIX:</span>
+                            <p className="font-mono text-gray-900 bg-white p-2 rounded mt-1 border border-green-200">
+                              {pixKey}
+                            </p>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-3">
+                            Após realizar o PIX, clique em "Confirmar Presente" para nos notificar.
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 mt-3">
-                        Após realizar o PIX, clique em "Confirmar Presente" para nos notificar.
-                      </p>
-                    </div>
-                  </div>
 
-                  {/* Botão Confirmar */}
-                  <Button
-                    onClick={handleConfirmGift}
-                    disabled={!formData.name || !formData.email || !formData.phone}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Confirmar Presente
-                  </Button>
+                      {/* Botão Confirmar PIX */}
+                      <Button
+                        onClick={handleConfirmGift}
+                        disabled={!formData.name || !formData.email || !formData.phone}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Confirmar Presente via PIX
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {/* Fluxo Cartão */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-semibold text-gray-900">Pagamento com Cartão</h4>
+                          <button
+                            onClick={() => setPaymentMethod(null)}
+                            className="text-sm text-blue-600 hover:text-blue-700 underline"
+                          >
+                            Voltar
+                          </button>
+                        </div>
+
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                          <div className="flex items-start gap-3">
+                            <CreditCard className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                            <div className="space-y-2 text-sm">
+                              <p className="text-gray-700">
+                                Você será redirecionado para o <strong>Mercado Pago</strong> e lá digitará o valor total do(s) presente(s) para finalizar o pagamento com cartão de crédito de forma segura.
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                Após concluir o pagamento, você receberá a confirmação no seu e-mail.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Botão Ir para Mercado Pago */}
+                        <Button
+                          onClick={handleCardPayment}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-xl flex items-center justify-center gap-2"
+                        >
+                          <CreditCard className="w-5 h-5" />
+                          Ir para Mercado Pago
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </motion.div>
             </motion.div>
